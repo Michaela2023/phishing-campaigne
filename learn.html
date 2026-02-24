@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Školení: Phishing</title>
+  <style>
+    :root{
+      --bg: #0b1220;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.10);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --accent: #62a0ff;
+      --shadow: 0 18px 50px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+
+    *{ box-sizing: border-box; }
+    body{
+      margin:0;
+      font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1000px 600px at 20% 10%, rgba(98,160,255,.18), transparent 60%),
+        radial-gradient(900px 500px at 85% 15%, rgba(255,140,105,.12), transparent 55%),
+        radial-gradient(900px 650px at 55% 90%, rgba(133,255,195,.08), transparent 60%),
+        var(--bg);
+      min-height: 100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    header{
+      padding: 18px 22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 14px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+    }
+    .dot{
+      width:12px;height:12px;border-radius:999px;background:var(--accent);
+      box-shadow: 0 0 0 6px rgba(98,160,255,.15);
+    }
+    h1{ margin:0; font-size: 16px; font-weight: 650; letter-spacing:.2px; }
+    .meta{
+      font-size: 13px; color: var(--muted);
+      display:flex; align-items:center; gap:10px;
+    }
+
+    main{
+      width:min(1100px, 94vw);
+      margin: 0 auto;
+      padding: 8px 0 22px;
+      flex: 1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .shell{
+      width:100%;
+      border-radius: calc(var(--radius) + 6px);
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .topbar{
+      padding: 14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: linear-gradient(to right, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    }
+
+    .progress{
+      display:flex; flex-direction:column; gap:6px; flex:1;
+      min-width: 180px;
+    }
+    .progressRow{
+      display:flex; align-items:center; justify-content:space-between;
+      font-size: 12px; color: var(--muted);
+    }
+    input[type="range"]{
+      width:100%;
+      accent-color: var(--accent);
+    }
+
+    .actions{
+      display:flex; gap:10px; align-items:center;
+    }
+    button{
+      appearance:none;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: transform .08s ease, background .15s ease;
+    }
+    button:hover{ background: rgba(255,255,255,.10); }
+    button:active{ transform: translateY(1px); }
+    button.primary{
+      background: rgba(98,160,255,.16);
+      border-color: rgba(98,160,255,.35);
+    }
+    button.primary:hover{ background: rgba(98,160,255,.22); }
+
+    .slide{
+      display:none;
+      padding: 18px;
+    }
+    .slide.active{ display:block; }
+
+    .grid{
+      display:grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 920px){
+      .grid{ grid-template-columns: 1.2fr 0.8fr; }
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow:hidden;
+    }
+    .card h2{
+      margin: 0 0 10px;
+      font-size: 18px;
+      font-weight: 720;
+      letter-spacing:.2px;
+    }
+    .card p, .card li{
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .card ul{ margin: 10px 0 0 18px; }
+
+    /* ✅ OPRAVENO: stabilní hero karta + obrázek (bez height:100%) */
+    .card.hero{
+      padding: 0;
+      background: rgba(255,255,255,.04);
+      display: flex;
+      flex-direction: column;
+      min-height: 360px;
+    }
+    .card.hero img{
+      width: 100%;
+      height: 360px;              /* pevná výška = nikdy se “neztratí” */
+      object-fit: cover;
+      display: block;
+      filter: saturate(1.05) contrast(1.02);
+    }
+    @media (min-width: 920px){
+      .card.hero{
+        min-height: 440px;
+      }
+      .card.hero img{
+        height: 440px;            /* desktop vyšší, ale pořád pevně */
+      }
+    }
+
+    .caption{
+      padding: 12px 14px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      font-size: 12px;
+      color: rgba(255,255,255,.65);
+      background: rgba(255,255,255,.03);
+    }
+
+    .callout{
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      padding: 12px 12px;
+      border-radius: 14px;
+      margin-top: 12px;
+    }
+
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.25);
+      padding: 3px 7px;
+      border-radius: 8px;
+      color: rgba(255,255,255,.85);
+    }
+
+    footer{
+      padding: 14px 22px 20px;
+      color: rgba(255,255,255,.55);
+      font-size: 12px;
+      text-align:center;
+    }
+
+
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="dot"></span>
+    <h1>Phishing & bezpečné přihlašování</h1>
+  </div>
+  <div class="meta">
+    <span>Ovládání:</span>
+    <span class="kbd">←</span><span class="kbd">→</span>
+  </div>
+</header>
+
+<main>
+  <div class="shell">
+    <div class="topbar">
+      <div class="progress">
+        <div class="progressRow">
+          <span id="slideTitle">Slide</span>
+          <span id="counter">1 / 1</span>
+        </div>
+        <input id="slider" type="range" min="1" max="1" step="1" value="1" />
+      </div>
+
+      <div class="actions">
+        <button id="prevBtn">Zpět</button>
+        <button id="nextBtn" class="primary">Další</button>
+      </div>
+    </div>
+
+    <!-- SLIDE 1 -->
+<section class="slide active" data-title="Co je phishing">
+    <div class="grid">
+      <div class="card">
+        <h2>Gratulujeme ! Právě jste se stali obětí interní phishingové kampaně spol. UP Česká republika! Bohužel nic nevyhráváte, ani na Vás nečekají žádné výhodné podmínky, ale jelikož zadání osobních údajů na podvodné stránky může být noční můrou, pojďme si tedy v pár větách říci, co je to phishing a jak se zachovat, pokud Vás něco takového potká ;-) </h2>
+        <p>
+          Phishing je pokus vylákat z Vás citlivé údaje (hesla, MFA kódy, čísla karet) nebo Vás přimět kliknout na škodlivý odkaz.
+          Útočník často hraje na emoce: <b>strach</b>, <b>spěch</b>, <b>zvědavost</b>.
+        </p>
+  
+        <div class="callout">
+          <p style="margin:0;">
+            Základní pravidlo: <b>když Vás někdo tlačí k rychlému provedení jakékoliv akce - zpomalte! </b> To je totiž většinou první phishing redflag. Další věci, kterým se vyplatí věnovat pozornost:
+          </p>
+        </div>
+  
+        <ul>
+          <li>Divná doména odesílatele</li>
+          <li>Nečekané přílohy / odkazy</li>
+          <li>Výhra, urgence, blokace účtu</li>
+        </ul>
+      </div>
+  
+      <div class="card hero" style="padding:0;">
+        <img
+          src="/images/login.png"
+          alt="login"
+          style="display:block; width:100%; height:420px; object-fit:cover;"
+        />
+        <div class="caption">Útočník často spoléhá na moment překvapení a spěch uživatele.</div>
+      </div>
+    </div>
+  </section>
+
+    <!-- SLIDE 2 -->
+    <section class="slide" data-title="Návnady: výhra, urgence, strach">
+      <div class="grid">
+        <div class="card">
+          <h2>Návnady, které fungují</h2>
+          <p>
+            Typické scénáře: “Vyhráváte iPhone zdarma”, “Vaše schránka je plná”, “Zablokovali jsme účet”.
+            Cílem je, abyste klikli a zadali svoje údaje na stránce, která vypadá důvěryhodně. Nicméně Vaše data jdou přímo k útočníkovi.
+          </p>
+          <ul>
+            <li>Odkaz vede na podezřelou doménu</li>
+            <li>Formulář chce víc, než dává smysl</li>
+            <li>Text je přeložený, s chybami, divná čeština</li>
+          </ul>
+          <div class="callout">
+            <p style="margin:0;"><b>Tip:</b> Před kliknutím přejeď myší po odkazu a zkontroluj cílovou URL adresu.</p>
+          </div>
+        </div>
+
+        <div class="card hero" style="padding:0;">
+            <img
+              src="/images/hacker.png"
+              alt="login"
+              style="display:block; width:100%; height:420px; object-fit:cover;"
+            />
+            <div class="caption">Před každým přihlášením přemýšlejte, jestli je svět opravdu tak krásný, že iphony padají z nebes.</div>
+          </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3 -->
+    <section class="slide" data-title="Proč je heslo jen začátek">
+      <div class="grid">
+        <div class="card">
+          <h2>Proč je to problém i mimo práci</h2>
+          <p>
+            Účty jsou propojené. Když útočník získá přístup k e-mailu, často resetuje hesla k dalším službám
+            (eshopy, sociální sítě). Proto se vyplatí mít unikátní hesla a MFA.
+          </p>
+          <ul>
+            <li>E-mail = reset hesel téměř všude</li>
+            <li>Recyklace hesel = dominový efekt</li>
+            <li>MFA výrazně snižuje riziko</li>
+          </ul>
+        </div>
+
+        <div class="card hero" style="padding:0;">
+            <img
+              src="/images/sit.png"
+              alt="login"
+              style="display:block; width:100%; height:420px; object-fit:cover;"
+            />
+            <div class="caption">Nepoužívejte stejné heslo všude a zvažte použití MFA</div>
+          </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4 -->
+    <section class="slide" data-title="Co dělat, když jsem klikla">
+      <div class="grid">
+        <div class="card">
+          <h2>Když jsem klikl/a a něco zadal/a</h2>
+          <ul>
+            <li>Nepokračujte v další akci na škodlivé stránce a neprodleně kontaktujte IT odd.</li>
+            <li>Pokud jste zadal/a heslo, <b>okamžitě ho změňte</b> (a všude, kde se opakuje).</li>
+            <li>Zapněte/zkontrolujte MFA.</li>
+            
+          </ul>
+
+          <div class="callout">
+            <p style="margin:0;">
+              Rychlá reakce je nejdůležitější. I jedno neopatrné kliknutí může být pro útočníka vstupní bod.
+            </p>
+          </div>
+        </div>
+
+        <div class="card hero" style="padding:0;">
+            <img
+              src="/images/password.png"
+              alt="login"
+              style="display:block; width:100%; height:420px; object-fit:cover;"
+            />
+            <div class="caption">Pokud už se Vám povedlo se přihlásit, nepanikařte a neprodleně změňte heslo.</div>
+          </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5 -->
+    <section class="slide" data-title="Kontaktujte IT / Security">
+      <div class="grid">
+        <div class="card">
+          <h2>IT oddělení nekouše! </h2>
+          <p>
+            Pokud máte podezření, že jste se přihlásili a zadali údaje někam, kam jste neměli, neprodleně kontaktujte IT odd. Nám to zabere 5 min. práce a můžeme tím společně zastavit pořádný průšvih. 
+            Čím dříve se to řeší, tím menší dopady tyto útoky mají.
+          </p>
+
+          <div class="callout">
+            <p style="margin:0;">
+              Připravte si: <b>čas</b>, <b>co se stalo</b>, <b>odkud to přišlo</b> (odesílatel / předmět), a ideálně <b>screenshot nebo ještě lépe přeposlat celý e-mail jako .eml</b>.
+            </p>
+          </div>
+
+          <ul>
+            
+            <li><b>Kontaktní e-mail:</b> security@upcz.cz</li>
+          </ul>
+
+          <p class="muted">
+            
+          </p>
+        </div>
+
+        <div class="card hero" style="padding:0;">
+            <img
+              src="/images/chivava.png"
+              alt="login"
+              style="display:block; width:100%; height:420px; object-fit:cover;"
+            />
+            <div class="caption">Incident vždy neprodleně nahlašte IT odd.</div>
+          </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6 -->
+    <section class="slide" data-title="Bonus: Co útočník udělá s vašimi údaji">
+      <div class="grid">
+        <div class="card">
+          <h2>Co útočník pravděpodobně s Vašimi daty provádí</h2>
+          <p>
+            Ukradené přihlašovací údaje mají pro útočníka hodnotu. Často je použije okamžitě, nebo je prodá dál.
+            Tohle jsou nejčastější scénáře:
+          </p>
+
+          <ul>
+            <li><b>Přihlášení do e-mailu</b> a dohledání faktur, citlivých dokumentů, kontaktů.</li>
+            <li><b>Reset hesel</b> na jiných službách (eshopy, sociální sítě) přes “Zapomenuté heslo”.</li>
+            <li><b>Rozesílání phishingu</b> z Vašeho účtu (lidé mu pak více věří, když to přijde “od Vás”).</li>
+            <li><b>Finanční podvody</b>: změna čísla účtu na faktuře, “urgentní platby”.</li>
+            <li><b>Přístup do firemních systémů</b>, pokud jsou účty propojené (SSO/VPN).</li>
+            <li><b>Prodej údajů</b> na darknetu (credential stuffing na další weby).</li>
+          </ul>
+
+          <div class="callout">
+            <p style="margin:0;">
+              Největší riziko je <b>recyklace hesel</b>. Jedno heslo pro více služeb = dominový efekt.
+            </p>
+          </div>
+
+          <p class="muted">
+            Proto: unikátní hesla + správce hesel + MFA (tam, kde to jde).
+          </p>
+        </div>
+
+        <div class="card hero" style="padding:0;">
+            <img
+              src="/images/darkweb.png"
+              alt="login"
+              style="display:block; width:100%; height:420px; object-fit:cover;"
+            />
+            <div class="caption">Útočník často Vaše data zneužije nebo je prodá dál</div>
+          </div>
+          </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  Školení phishing 2026
+</footer>
+
+<script>
+  const slides = Array.from(document.querySelectorAll(".slide"));
+  const slider = document.getElementById("slider");
+  const counter = document.getElementById("counter");
+  const title = document.getElementById("slideTitle");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  let idx = 0;
+
+  function show(i){
+    idx = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((s, n) => s.classList.toggle("active", n === idx));
+    slider.value = String(idx + 1);
+    slider.max = String(slides.length);
+    counter.textContent = `${idx + 1} / ${slides.length}`;
+    title.textContent = slides[idx].dataset.title || `Slide ${idx + 1}`;
+    prevBtn.disabled = idx === 0;
+    nextBtn.textContent = (idx === slides.length - 1) ? "Konec zvonec" : "Další";
+  }
+
+  slider.addEventListener("input", () => show(Number(slider.value) - 1));
+  prevBtn.addEventListener("click", () => show(idx - 1));
+  nextBtn.addEventListener("click", () => {
+    if (idx === slides.length - 1) {
+      window.location.href = "index.html";
+      return;
+    }
+    show(idx + 1);
+  });
+
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") show(idx - 1);
+    if (e.key === "ArrowRight") show(idx + 1);
+  });
+
+  show(0);
+</script>
+</body>
+</html>
