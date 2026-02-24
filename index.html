@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <title>Přihlášení</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .header-logo {
+      padding: 1rem 2rem 0.5rem 2rem;
+    }
+
+    .header-logo svg {
+      height: 52px;
+    }
+
+    .topbar {
+      background-color: #003f7d;
+      color: white;
+      padding: 0.6rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .leftbar {
+      display: flex;
+      align-items: center;
+    }
+
+    .madison {
+      display: flex;
+      align-items: center;
+      font-size: 1.2rem;
+      color: #9ec4e3;
+      margin-left: 0.6rem;
+    }
+
+    .circle-icon {
+      width: 26px;
+      height: 26px;
+      margin-right: 0.6rem;
+      fill: none;
+      stroke: #9ec4e3;
+    }
+
+    .circle-icon path {
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .flag {
+      width: 24px;
+      height: 16px;
+    }
+
+    .login-container {
+      height: calc(100vh - 110px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-box {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.3);
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-box h2 {
+      margin: 0 0 1.5rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-size: 0.95rem;
+      color: #333;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 1.2rem;
+      font-size: 1rem;
+    }
+
+    input::placeholder {
+      color: #aaa;
+    }
+
+    .forgot {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 1.5rem;
+      color: #0073e6;
+      text-decoration: none;
+    }
+
+    .login-button {
+      width: 100%;
+      padding: 0.9rem;
+      background-color: #0073e6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .login-button:hover {
+      background-color: #005bb5;
+    }
+  </style>
+
+  <!-- napojení na jQuery + main.js -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="./main.js"></script>
+</head>
+<body>
+  <!-- Logo -->
+  <div class="header-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 60">
+      <text x="0" y="25" font-size="20" font-family="Segoe UI, sans-serif" font-weight="600" fill="#0073e6">
+        forv<tspan fill="#0073e6" font-size="16" dy="2">I</tspan>s
+      </text>
+      <text x="0" y="50" font-size="20" font-family="Segoe UI, sans-serif" font-weight="600" fill="#003f7d">
+        mazars
+      </text>
+    </svg>
+  </div>
+
+  <!-- Horní lišta -->
+  <div class="topbar">
+    <div class="leftbar">
+      <!-- Ikona se dvěma šipkami dolů v kruhu -->
+      <svg class="circle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M8 10l4 4 4-4"/>
+        <path d="M8 6l4 4 4-4"/>
+      </svg>
+
+      <div class="madison">Madison</div>
+    </div>
+
+    <!-- Česká vlajka -->
+    <svg class="flag" viewBox="0 0 640 480">
+      <defs>
+        <clipPath id="a">
+          <path fill-opacity=".7" d="M0 0h640v480H0z"/>
+        </clipPath>
+      </defs>
+      <g clip-path="url(#a)">
+        <path fill="#d7141a" d="M0 0h640v480H0z"/>
+        <path fill="#fff" d="M0 0h640v240H0z"/>
+        <path fill="#11457e" d="M0 0l320 240L0 480z"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Přihlašovací formulář -->
+  <div class="login-container">
+    <form class="login-box">
+      <h2>Přihlášení</h2>
+
+      <label for="email">Přihlašovací e-mail</label>
+      <input type="email" id="email" name="email" required placeholder="jan.novak@gmail.com" />
+
+      <label for="password">Heslo</label>
+      <input type="password" id="password" name="password" required placeholder="************" />
+
+      <a class="forgot" href="#">Zapomenuté heslo</a>
+
+      <!-- tlačítko volá log_login() z main.js -->
+      <button type="button" class="login-button" onclick="log_login(); return false;">Přihlásit se</button>
+    </form>
+  </div>
+</body>
+</html>
