@@ -1,3 +1,30 @@
+phishing-2026/
+├─ images/
+│  ├─ login.png
+│  ├─ hacker.png
+│  ├─ darkweb.png
+│  ├─ chivava.png
+│  ├─ password.png
+│  └─ sit.png
+│
+├─ log/
+│  └─ login_success.txt
+│
+├─ docker-compose.yml
+├─ Dockerfile
+│
+├─ index.html        # Přihlašovací stránka
+├─ learn.html        # Výuková / learning stránka
+│
+├─ main.js           # Frontend logika (login + redirect)
+├─ login.php         # Zápis přihlášení do logu
+├─ log.php           # (pokud používáš log_access / další logování)
+│
+└─ README.md
+
+
+
+
 Stránky běží v DOCKERU ! Musí být běžící v dockeru, protože PHP bez webserveru neběží ! - nefunguje zobrazení přes live-host
 
 
